@@ -1,0 +1,83 @@
+:root {
+  --btn-add-color: rgb(76, 228, 76);
+  --btn-del-color: rgb(228, 76, 122);
+}
+.wrapper {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  margin: auto;
+  margin: 0;
+  /* transform: translate(-50%, -50%); */
+}
+
+.button {
+  display: block;
+  width: inherit;
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 50px;
+  line-height: 46px;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 50px;
+  font-size: 20px;
+  font-family: arial;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  text-transform: uppercase;
+  transition: all 0.35s;
+  margin: auto;
+}
+.button_add {
+  border: 3px solid var(--btn-add-color);
+  color: var(---btn-add-color);
+}
+.button_del {
+  border: 3px solid var(--btn-del-color);
+  color: var(--btn-del-color);
+  height: 25px;
+  font-size: 14px;
+  line-height: 0px;
+}
+
+.button:before,
+.button:after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: -100%;
+  left: 0;
+  z-index: -1;
+  transition: all 0.35s;
+}
+.button_add::before,
+.button_add::after {
+  background: var(--btn-add-color);
+}
+.button_del::before,
+.button_del::after {
+  background: var(--btn-del-color);
+}
+
+.button:before {
+  opacity: 0.5;
+}
+
+.button:after {
+  transition-delay: 0.2s;
+  opacity: 0.5;
+}
+
+.button:hover {
+  color: #fff;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.button:hover:before,
+.button:hover:after {
+  top: 0;
+}

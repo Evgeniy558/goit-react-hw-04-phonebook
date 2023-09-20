@@ -1,0 +1,30 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+.label {
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input {
+  display: block;
+  height: 20px;
+  border-radius: 15px;
+  padding-left: 20px;
+  border: none;
+}
+
+.input:focus {
+  background: linear-gradient(
+    93deg,
+    rgb(252, 252, 252) 10%,
+    rgba(76, 228, 76, 0.3) 100%
+  );
+  background-blend-mode: normal;
+  outline: 2px solid green;
+}
