@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import css from "./ContactsForm.module.css";
 import Button from "./button/Button";
 import PropTypes from "prop-types";
+
 const Form = ({ onSubmit }) => {
   const patternName = "^[a-zA-Z]+(([' \u2013][a-zA-Z])?[a-zA-Z]*)*$";
   const patternTel = "^\\+48\\d{3}\\d{3}\\d{3}$";

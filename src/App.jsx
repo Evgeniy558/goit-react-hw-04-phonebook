@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import css from "./App.module.css";
 import { nanoid } from "nanoid";
 import Form from "./components/contactForm/ContactsForm";
@@ -7,92 +7,74 @@ import Filter from "./components/filter/Filter";
 import { saveToLocalStorage } from "./components/serveces/saveToLocalStorage";
 import { getFromLocalStorage } from "./components/serveces/getFromLocalStorage";
 import { filterContacts } from "./components/serveces/filterContacts";
-class App extends Component {
-  state = {
-    contacts: [],
-    displayedContacts: [],
-    filter: "",
-  };
 
-  componentDidMount() {
-    //get contacts from localStorage for rendering
-    const contacts = getFromLocalStorage();
-    if (contacts && contacts.length) {
-      this.setState({ contacts });
+export const App = () => {
+  const [contacts, setContacts] = useState([]);
+  const [filter, setfilter] = useState("");
+
+  useEffect(() => {
+    const contactsFromLocalStorage = getFromLocalStorage();
+    if (contactsFromLocalStorage && contactsFromLocalStorage.length) {
+      setContacts([...contacts, ...contactsFromLocalStorage]);
     }
-  }
+  }, []);
 
-  //add contact to localstorage
-  addContact = (event) => {
+  useEffect(() => {
+    saveToLocalStorage(contacts);
+  }, [contacts]);
+
+  const addContact = (event) => {
     event.preventDefault();
     const name = event.target.elements.name.value;
     const number = event.target.elements.number.value;
     if (
-      this.state.contacts.find((el) => {
+      contacts.find((el) => {
         return el.name.toLocaleLowerCase() === name.toLowerCase();
       })
     ) {
       alert(`${name} is already in contacts`);
     } else {
-      this.setState(
-        (prevState) => ({
-          contacts: [
-            ...prevState.contacts,
-            { id: nanoid(), name: name, number: number },
-          ],
-        }),
-        () => {
-          saveToLocalStorage(this.state.contacts);
-        }
-      );
+      setContacts((prevContacts) => {
+        const updatedContacts = [
+          ...prevContacts,
+          { id: nanoid(), name: name, number: number },
+        ];
+        return updatedContacts;
+      });
     }
-
     event.currentTarget.reset();
   };
 
-  handleSearch = (event) => {
+  const handleSearch = (event) => {
     const { value } = event.target;
-    this.setState({ filter: value }, () => {
-      const displayedContacts = filterContacts(
-        this.state.contacts,
-        this.state.filter
-      );
-      this.setState({ displayedContacts });
-    });
+    setfilter(value);
   };
 
-  deleteContact = (id) => {
-    const contacts = getFromLocalStorage().filter((el) => {
+  const deleteContact = (id) => {
+    const contactsAfterDel = getFromLocalStorage().filter((el) => {
       return el.id !== id;
     });
-    this.setState({ contacts });
-    saveToLocalStorage(contacts);
+    setContacts(contactsAfterDel);
   };
 
-  render() {
-    const { contacts, filter } = this.state;
-    const displayedContacts = filter
-      ? filterContacts(contacts, filter)
-      : contacts;
-
-    return (
-      <div className="App">
-        <header className={css.appheader}>
-          <section className={css.section}>
-            <h1>Phonebook</h1>
-            <Form onSubmit={this.addContact} />
-          </section>
-          <section className={css.section}>
-            <h2>Contacts</h2>
-            <Filter onChange={this.handleSearch} />
-            <List
-              displayedContacts={displayedContacts}
-              onClick={this.deleteContact}
-            />
-          </section>
-        </header>
-      </div>
-    );
-  }
-}
-export default App;
+  return (
+    <div className="App">
+      <header className={css.appheader}>
+        <section className={css.section}>
+          <h1>Phonebook</h1>
+          <Form onSubmit={addContact} />
+        </section>
+        <section className={css.section}>
+          <h2>Contacts</h2>
+          <Filter onChange={handleSearch} />
+          <List
+            displayedContacts={
+              filter ? filterContacts(contacts, filter) : contacts
+            }
+            onClick={deleteContact}
+          />
+        </section>
+      </header>
+    </div>
+  );
+};
