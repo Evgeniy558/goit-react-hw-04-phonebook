@@ -2,17 +2,32 @@ import { nanoid } from "nanoid";
 import css from "./ContactsForm.module.css";
 import Button from "./button/Button";
 import PropTypes from "prop-types";
+import { useState } from "react";
+const patternName = "^[a-zA-Z]+(([' \u2013][a-zA-Z])?[a-zA-Z]*)*$";
+const patternTel = "^\\+48\\d{3}\\d{3}\\d{3}$";
 
 const Form = ({ onSubmit }) => {
-  const patternName = "^[a-zA-Z]+(([' \u2013][a-zA-Z])?[a-zA-Z]*)*$";
-  const patternTel = "^\\+48\\d{3}\\d{3}\\d{3}$";
+  const [formData, setFormData] = useState({ name: "", number: "" });
+
+  const handleInputChanche = (ev) => {
+    const { name, value } = ev.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (ev) => {
+    ev.preventDefault();
+    const form = ev.target;
+    onSubmit(formData);
+    form.reset();
+  };
 
   return (
-    <form onSubmit={onSubmit} className={css.form}>
+    <form onSubmit={handleSubmit} className={css.form}>
       <label className={css.label}>
         Name
         <input
           className={css.input}
+          onChange={handleInputChanche}
           id={nanoid()}
           type="text"
           name="name"
@@ -25,6 +40,7 @@ const Form = ({ onSubmit }) => {
         Number
         <input
           className={css.input}
+          onChange={handleInputChanche}
           type="tel"
           name="number"
           pattern={patternTel}
